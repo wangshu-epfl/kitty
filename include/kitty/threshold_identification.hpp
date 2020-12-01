@@ -33,8 +33,11 @@
 #pragma once
 
 #include <vector>
-// #include <lpsolve/lp_lib.h> /* uncomment this line to include lp_solve */
+#include <lpsolve/lp_lib.h> /* uncomment this line to include lp_solve */
 #include "traits.hpp"
+
+#include <iostream> // need to be deleted
+using namespace std;
 
 namespace kitty
 {
@@ -61,6 +64,88 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
   std::vector<int64_t> linear_form;
 
   /* TODO */
+
+  // Get some params
+  int32_t num_bits = static_cast<uint32_t>( tt.num_bits() );
+  int32_t num_vars = static_cast<uint32_t>( tt.num_vars() );
+  auto tt_flip = tt;
+  // Print truth table
+  std::cout << "Truth table of f is:";
+  for ( int32_t i = num_bits - 1; i >= 0; i-- )
+  {
+    std::cout << get_bit( tt, i );
+  }
+  std::cout << endl;
+  
+  // Get cofactor
+  for ( int32_t i = 0u; i < num_vars ; ++i )
+  {
+    auto fxi     = cofactor1(tt, i);
+    auto fxi_bar = cofactor0(tt, i);
+    /*
+    // Print out cofactor
+    std::cout << "Truth table of fx" << i << "     is: ";
+    for ( int32_t j = static_cast<uint32_t>( fxi.num_bits() ) - 1; j >= 0; j-- )
+    {
+      std::cout << get_bit( fxi, j );
+    }
+    std::cout << endl;
+    std::cout << "Truth table of fx" << i << "_bar is: ";
+    for ( int32_t j = static_cast<uint32_t>( fxi_bar.num_bits() ) - 1; j >= 0; j-- )
+    {
+      std::cout << get_bit( fxi_bar, j );
+    }
+    std::cout << endl;
+    */
+    // Check whether f is positive or negative unate
+    if ( less_than( fxi, fxi_bar ) )
+    {
+      std::cout << "f is negative unate in x" << i << endl;
+      tt_flip = flip( tt_flip, i ); // Flip xi so f_flip is positive unate in xi
+    }
+    else if ( less_than( fxi_bar, fxi ) )
+    {
+      std::cout << "f is positive unate in x" << i << endl;
+    }
+    else
+    {
+      std::cout << "f is binate in x" << i << endl;
+      return false;
+    }
+  }
+
+  /*
+  // check tt_flip
+  // Print truth table of f_flip
+  std::cout << "Truth table of f_flip is:";
+  for ( int32_t i = num_bits - 1; i >= 0; i-- )
+  {
+    std::cout << get_bit( tt_flip, i );
+  }
+  std::cout << endl;
+  for ( int32_t i = 0u; i < num_vars; ++i )
+  {
+    auto fxi = cofactor1( tt_flip, i );
+    auto fxi_bar = cofactor0( tt_flip, i );
+    // Check whether f_flip is positive or negative unate
+    if ( less_than( fxi, fxi_bar ) )
+    {
+      std::cout << "f_flip is negative unate in x" << i << endl;
+    }
+    else if ( less_than( fxi_bar, fxi ) )
+    {
+      std::cout << "f_flip is positive unate in x" << i << endl;
+    }
+    else
+    {
+      std::cout << "f_flip is binate in x" << i << endl;
+    }
+  }
+  */
+
+  // Build ILP problem with tt_flip
+
+
   /* if tt is non-TF: */
   return false;
 
