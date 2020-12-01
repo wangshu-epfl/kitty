@@ -98,22 +98,21 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
     std::cout << endl;
     */
     // Check whether f is positive or negative unate
-    if ( less_than( fxi, fxi_bar ) )
+    if ( implies( fxi, fxi_bar ) )
     {
       std::cout << "f is negative unate in x" << i << endl;
       tt_flip = flip( tt_flip, i ); // Flip xi so f_flip is positive unate in xi
     }
-    else if ( less_than( fxi_bar, fxi ) )
+    else if ( implies( fxi_bar, fxi ) )
     {
       std::cout << "f is positive unate in x" << i << endl;
     }
     else
     {
       std::cout << "f is binate in x" << i << endl;
-      return false;
+      // return false;
     }
   }
-
   /*
   // check tt_flip
   // Print truth table of f_flip
@@ -128,11 +127,11 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
     auto fxi = cofactor1( tt_flip, i );
     auto fxi_bar = cofactor0( tt_flip, i );
     // Check whether f_flip is positive or negative unate
-    if ( less_than( fxi, fxi_bar ) )
+    if ( implies( fxi, fxi_bar ) )
     {
       std::cout << "f_flip is negative unate in x" << i << endl;
     }
-    else if ( less_than( fxi_bar, fxi ) )
+    else if ( implies( fxi_bar, fxi ) )
     {
       std::cout << "f_flip is positive unate in x" << i << endl;
     }
@@ -142,7 +141,6 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
     }
   }
   */
-
   // Build ILP problem with tt_flip
 
 
