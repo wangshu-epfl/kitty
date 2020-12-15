@@ -36,8 +36,9 @@
 #include <lpsolve/lp_lib.h> /* uncomment this line to include lp_solve */
 #include "traits.hpp"
 
-#include <iostream> // need to be deleted
-using namespace std;
+/* Just for test */
+//#include <iostream> 
+//using namespace std;
 
 namespace kitty
 {
@@ -68,18 +69,19 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
   int32_t num_bits = static_cast<uint32_t>( tt.num_bits() );
   int32_t num_vars = static_cast<uint32_t>( tt.num_vars() );
   auto tt_flip = tt;
-  int flip_table[100];
+  int flip_table[1000];
   int i, j, k, v, wk;
   // Print truth table
+  /*
   std::cout << "Truth table of f is:";
   for ( int32_t i = num_bits - 1; i >= 0; i-- )
   {
     std::cout << get_bit( tt, i );
   }
   std::cout << endl;
-  
+  */
   // Get cofactor
-  for ( int32_t i = 0u; i < num_vars ; ++i )
+  for ( i = 0u; i < num_vars ; ++i )
   {
     auto fxi     = cofactor1(tt, i);
     auto fxi_bar = cofactor0(tt, i);
@@ -97,34 +99,36 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
       std::cout << get_bit( fxi_bar, j );
     }
     std::cout << endl;
-    */
+    */ 
     // Check whether f is positive or negative unate
     if ( implies( fxi, fxi_bar ) )
     {
-      std::cout << "f is negative unate in x" << i << endl;
+      //std::cout << "f is negative unate in x" << i << endl;
       tt_flip = flip( tt_flip, i ); // Flip xi so f_flip is positive unate in xi
       flip_table[i] = 1;
     }
     else if ( implies( fxi_bar, fxi ) )
     {
-      std::cout << "f is positive unate in x" << i << endl;
+      //std::cout << "f is positive unate in x" << i << endl;
       flip_table[i] = 0;
     }
     else
     {
-      std::cout << "f is binate in x" << i << endl;
+      //std::cout << "f is binate in x" << i << endl;
       return false;
     }
+
   }
+  
   // check tt_flip
   // Print truth table of f_flip
+  /*
   std::cout << "Truth table of f_flip is:";
-  for ( int32_t i = num_bits - 1; i >= 0; i-- )
+  for (  i = num_bits - 1; i >= 0; i-- )
   {
     std::cout << get_bit( tt_flip, i );
   }
   std::cout << endl;
-  /*
   for ( int32_t i = 0u; i < num_vars; ++i )
   {
     auto fxi = cofactor1( tt_flip, i );
@@ -264,11 +268,9 @@ bool is_threshold( const TT& tt, std::vector<int64_t>* plf = nullptr )
   if ( colno != NULL )
     free( colno );
 
+  /* clean up such that all used memory by lpsolve is freed */
   if ( lp != NULL )
-  {
-    /* clean up such that all used memory by lpsolve is freed */
     delete_lp( lp );
-  }
 
   // std::cout << "ret = " << ret << endl;
 
